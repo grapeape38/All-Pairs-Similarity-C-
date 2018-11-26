@@ -9,25 +9,30 @@ using IList = std::vector<std::pair<int,double>>;
 class InvList { 
     private:
         std::vector<IList> lists;
-        //std::vector<int> fp;
+        std::vector<int> fp;
         int size;
     public:
         InvList(int sz) : size(sz) {
             lists.assign(sz,IList());
-            //fp.assign(sz,0);
+            fp.assign(sz,0);
         }
         void add(int i, int x, double w) {
             lists[i].push_back({x, w});
         }
-        /*void prune(int i, std::vector<int> &sz, double minsize) {
+        void prune(int i, std::vector<int> &lens, double minsize) {
             while (fp[i] < lists[i].size() && 
-                    sz[lists[i][fp[i]].first] < minsize) {
-                fp++;
+                    lens[lists[i][fp[i]].first] < minsize) {
+                fp[i]++;
             }
-        }*/
+            if (fp[i] >= lists[i].size() / 2) {
+                IList il(lists[i].size() - fp[i] + 1);
+                std::copy(lists[i].begin() + fp[i], lists[i].end(), il.begin());
+                lists[i] = std::move(il);
+            }
+        }
         IList operator[](size_t i) const { 
-            return lists[i];
-            //return lists[i+fp[i]];
+            //return lists[i];
+            return lists[i + fp[i]];
         };
 };
 

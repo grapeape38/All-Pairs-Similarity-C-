@@ -3,20 +3,16 @@
 #include <unordered_map>
 
 #include "AllPairs.h"
-#include "Vectors.h"
 
 using V = std::vector<double>;
 
 class AllPairs1 : public AllPairs {
     public:
-        AllPairs1(std::vector<V> &v_, int sz, double t) 
-            : AllPairs(v_, sz) 
+        AllPairs1(VectorList &vl_, double t) 
+            : AllPairs(vl_) 
         {
-            V maxPerVec, maxPerFeat;
-            std::vector<int> idxVec(vecs.size()), idxFeat(sz);
-            getFeatureInfo(vecs, size, maxPerVec, maxPerFeat, idxVec, idxFeat);
-            for (int i = 0; i < (int)vecs.size(); i++) {
-                V &v = vecs[i];
+            for (int i = 0; i < vl.numVecs(); i++) {
+                V &v = vl[i];
                 std::vector<Res> R, U; 
                 FindMatches(i, R, t);
                 std::set_union(ResList.begin(), ResList.end(),
@@ -24,9 +20,9 @@ class AllPairs1 : public AllPairs {
                         std::back_inserter(U));
                 ResList = std::move(U);
                 double b = 0.0;
-                for (int j : idxFeat) {
+                for (int j : vl.idxFeat()) {
                     if (v[j] != 0) {
-                        b += maxPerFeat[j] * v[j];
+                        b += vl.maxPerFeat[j] * v[j];
                         if (b >= t) {
                             il.add(j, i, v[j]);
                             v[j] = 0;
@@ -36,7 +32,7 @@ class AllPairs1 : public AllPairs {
             }
         }
         void FindMatches(int x, std::vector<Res> &R, double t) {
-            V &v = vecs[x];
+            V &v = vl[x];
             std::unordered_map<int, double> A;
             for (int i = 0; i < size; i++) {
                 if (v[i] != 0) {
@@ -48,7 +44,7 @@ class AllPairs1 : public AllPairs {
                 }
             }
             for (const auto &y : A) {
-                double s = y.second + dot(v, vecs[y.first]);
+                double s = y.second + dot(v, vl[y.first]);
                 if (s >= t)
                     R.push_back({x, y.first, s});
             }

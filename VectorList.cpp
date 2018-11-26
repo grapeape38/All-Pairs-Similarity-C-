@@ -2,7 +2,7 @@
 #include <numeric>
 #include <algorithm>
 
-#include "Vectors.h"
+#include "VectorList.h"
 
 using V = std::vector<double>;
 
@@ -14,29 +14,24 @@ void normalize(V &v) {
     v = std::move(res);
 }
 
-void normalize(std::vector<V> &vs) {
-    for (V &v : vs)
-        normalize(v);
-}
-
 double dot(V &v1, V &v2) {
     return std::inner_product(v1.begin(), v1.end(), v2.begin(), 0.0);
 }
 
-void getFeatureInfo(const std::vector<V> &vecs, int size,
-                    V &maxPerVec, V &maxPerFeat,
-                    std::vector<int> &idxVec, std::vector<int> &idxFeat)
+VectorList::VectorList(std::vector<V> &vs, int sz)
+    : vecs(vs), size(sz), descFeatureIdx(sz), descVecIdx(vecs.size()), lengths(sz)
 {
-    maxPerVec.assign(vecs.size(), -1.1);
-    maxPerFeat.assign(size, -1.1);
-    std::iota(idxVec.begin(), idxVec.end(), 0);
-    std::iota(idxFeat.begin(), idxFeat.end(), 0);
+    std::iota(descFeatureIdx.begin(), descFeatureIdx.end(), 0);
+    std::iota(descVecIdx.begin(), descVecIdx.end(), 0);
     std::vector<int> featCount(size);
+    maxPerFeat.assign(size, -1.1);
+    maxPerVec.assign(vecs.size(), -1.1);
     for (int x = 0; x < (int)vecs.size(); x++) {
         const V &v = vecs[x];
         for (int i = 0; i < size; i++) {
             if (v[i] != 0) {
                 featCount[i]++;
+                lengths[x]++;
                 maxPerFeat[i] = std::max(maxPerFeat[i], v[i]);
                 maxPerVec[x] = std::max(maxPerVec[x], v[i]);
             }
@@ -44,8 +39,7 @@ void getFeatureInfo(const std::vector<V> &vecs, int size,
     }
     auto cmpFeat = [&](int i, int j) { return featCount[i] > featCount[j]; };
     auto cmpVec = [&](int i, int j) { return maxPerVec[i] > maxPerVec[j]; };
-    sort(idxFeat.begin(), idxFeat.end(), cmpFeat);
-    sort(idxVec.begin(), idxVec.end(), cmpVec);
+    std::sort(descFeatureIdx.begin(), descFeatureIdx.end(), cmpFeat);
+    std::sort(descVecIdx.begin(), descVecIdx.end(), cmpVec);
 }
-
 

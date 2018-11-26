@@ -3,24 +3,21 @@
 #include <unordered_map>
 
 #include "AllPairs.h"
-#include "Vectors.h"
 
 using V = std::vector<double>;
 
 class AllPairs2 : public AllPairs {
     private:
-        V maxPerVec, maxPerFeat, maxUnind;
-        std::vector<int> sizes;
+        std::vector<int> rem_size;
+        V maxUnind;
     public:
-        AllPairs2(std::vector<V> &v_, int sz, double t) 
-            : AllPairs(v_, sz) 
+        AllPairs2(VectorList &vl_, double t) 
+            : AllPairs(vl_) 
         {
-            maxUnind.assign(sz, -1.1);
-            sizes.assign(sz, sz);
-            std::vector<int> idxVec(vecs.size()), idxFeat(sz);
-            getFeatureInfo(vecs, size, maxPerVec, maxPerFeat, idxVec, idxFeat);
-            for (int i : idxVec) {
-                V &v = vecs[i];
+            maxUnind.assign(size, -1.1);
+            rem_size = vl.lengths;
+            for (int i : vl.idxFeat()) {
+                V &v = vl[i];
                 std::vector<Res> R, U; 
                 FindMatches(i, R, t);
                 std::set_union(ResList.begin(), ResList.end(),
@@ -28,13 +25,13 @@ class AllPairs2 : public AllPairs {
                         std::back_inserter(U));
                 ResList = std::move(U);
                 double b = 0.0;
-                for (int j : idxFeat) {
+                for (int j : vl.idxVec()) {
                     if (v[j] != 0) {
-                        b += std::min(maxPerVec[i], maxPerFeat[j]) * v[j];
+                        b += std::min(vl.maxPerVec[i], vl.maxPerFeat[j]) * v[j];
                         if (b >= t) {
                             il.add(j, i, v[j]);
                             v[j] = 0;
-                            sizes[i]--;
+                            rem_size[i]--;
                         }
                         else {
                             maxUnind[i] = std::max(maxUnind[i], v[j]);
@@ -44,12 +41,13 @@ class AllPairs2 : public AllPairs {
             }
         }
         void FindMatches(int x, std::vector<Res> &R, double t) {
-            V &v = vecs[x];
+            V &v = vl[x];
             std::unordered_map<int, double> A;
-            double remscore = dot(v, maxPerFeat);
-            //int minsize = t / maxPerVec[x];
+            double remscore = dot(v, vl.maxPerFeat);
+            int minsize = t / vl.maxPerVec[x];
             for (int i = 0; i < size; i++) {
                 if (v[i] != 0) {
+                    il.prune(i, vl.lengths, minsize);
                     for (const auto &p : il[i]) {
                         int y = p.first;
                         double w = p.second;
@@ -57,15 +55,15 @@ class AllPairs2 : public AllPairs {
                             A[y] += v[i] * w;
                         }
                     }
-                    remscore -= v[i] * maxPerFeat[i];
+                    remscore -= v[i] * vl.maxPerFeat[i];
                 }
             }
             for (const auto &y : A) {
                double approx = y.second 
-                    + std::min(sizes[y.first], (int)v.size())
-                    * maxPerVec[x] * maxUnind[y.first];
+                    + std::min(rem_size[y.first], vl.lengths[x])
+                    * vl.maxPerVec[x] * maxUnind[y.first];
                 if (approx >= t) {
-                    double s = y.second + dot(v, vecs[y.first]);
+                    double s = y.second + dot(v, vl[y.first]);
                     if (s >= t)
                         R.push_back({x, y.first, s});
                 }

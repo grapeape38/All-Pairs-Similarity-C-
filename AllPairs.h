@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
+
 #include "InvList.cpp"
+#include "VectorList.h"
 
 #ifndef ALLPAIRS_H
 #define ALLPAIRS_H
-
-using V = std::vector<double>;
 
 struct Res {
     int x, y;
@@ -17,13 +17,13 @@ struct Res {
 
 class AllPairs {
     protected:
-        std::vector<V> vecs;
+        VectorList vl;
         std::vector<Res> ResList;
         InvList il;
         int size;
     public:
-        AllPairs(std::vector<V> v, int sz) 
-            : vecs(v), size(sz), il(sz) {}
+        AllPairs(VectorList vl_) 
+            : vl(vl_), size(vl_.numFeats()), il(vl_.numFeats()) {}
         virtual void FindMatches(int x, std::vector<Res> &R, double t) = 0;
         void printPairs() {
             for (const Res &r : ResList) {
