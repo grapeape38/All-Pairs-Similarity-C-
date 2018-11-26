@@ -5,38 +5,42 @@
 #include "AllPairs.h"
 
 using V = std::vector<double>;
+using VXW = std::vector<std::pair<int,double>>;
 
 class AllPairs0 : public AllPairs {
     public:
-        AllPairs0(VectorList vl_, double t) 
+        AllPairs0(VectorList &vl_, double t) 
             : AllPairs(vl_)
         {
-            for (int i = 0; i < vl.numVecs(); i++) {
+            for (Vec &vec : vl) {
+                int i = vec.i;
                 std::vector<Res> R, U; 
-                FindMatches(i, R, t);
+                FindMatches(vec, R, t);
                 std::set_union(ResList.begin(), ResList.end(),
                         R.begin(), R.end(),
                         std::back_inserter(U));
                 ResList = std::move(U);
-                for (int j = 0; j < size; j++) {
-                    if (vl[i][j] != 0)
-                        il.add(j, i, vl[i][j]);
+                const VXW &v = vec.v;
+                for (const auto &p : v) {
+                    il.add(p.first, i, p.second);
                 }
             }
         }
-        void FindMatches(int x, std::vector<Res> &R, double t) {
+        void FindMatches(Vec &vec, std::vector<Res> &R, double t) {
+            int x = vec.i;
+            VXW &v = vec.v;
             std::unordered_map<int, double> A;
-            const V &v = vl[x];
-            for (int i = 0; i < size; i++) {
-                if (v[i] != 0) {
-                    for (const auto &p : il[i]) {
-                        int y = p.first;
-                        double w = p.second;
-                        A[y] += v[i] * w;
-                    }
+            for (const auto &p : v) {
+                int i = p.first;
+                double w = p.second;
+                for (const auto &p2 : il[i]) {
+                    int y = p2.first;
+                    double w2 = p2.second;
+                    A[y] += w * w2;
                 }
             }
             for (const auto &y : A) {
+                n_can_consid++;
                 if (y.second >= t)
                     R.push_back({x, y.first, y.second});
             }
