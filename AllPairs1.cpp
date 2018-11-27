@@ -26,11 +26,10 @@ class AllPairs1 : public AllPairs {
                 for (auto &p : v) {
                     int j = p.first;
                     double w = p.second;
-                    b += vl.maxPerFeat[j] * w;
+                    b += vl_.maxPerFeat[j] * w;
                     if (b >= t) {
                         il.add(j, i, w);
                         p.second = 0;
-                        vec.s[j] = 0;
                     }
                 }
             }
@@ -50,7 +49,7 @@ class AllPairs1 : public AllPairs {
             }
             for (const auto &y : A) {
                 n_can_consid++;
-                double s = y.second + dot(vec.s, vl[y.first]);
+                double s = y.second + dot(v, vl[y.first], vl.cmpF);
                 if (s >= t)
                     R.push_back({x, y.first, s});
             }

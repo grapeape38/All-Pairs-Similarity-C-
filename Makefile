@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS=-std=c++11 -g
-OBJS=AllPairsDriver.o AllPairs0.o AllPairs1.o VectorList.o InvList.o BinVectorList.o VectorFunctions.o
+OBJS=AllPairsDriver.o AllPairs0.o AllPairs1.o VectorList.o InvList.o VectorFunctions.o
 
 all: $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o allpairs 
@@ -10,8 +10,8 @@ all: $(OBJS)
 #AllPairs0.o: AllPairs0.cpp InvList.cpp AllPairs.h 
 #AllPairs1.o: AllPairs1.cpp InvList.cpp VectorList.h AllPairs.h VectorFunctions.h
 #AllPairs2.o: AllPairs1.cpp InvList.cpp VectorList.h AllPairs.h VectorFunctions.h
-#AllPairsBinary.o: AllPairsBinary.cpp BinVectorList.cpp AllPairs.h VectorFunctions.h InvList.cpp
-#VectorList.o : VectorList.h VectorList.cpp
+#AllPairsBinary.o: AllPairsBinary.cpp AllPairs.h VectorFunctions.h InvList.cpp
+#VectorList.o : VectorList.h 
 #VectorFunctions.o : VectorFunctions.h VectorFunctions.cpp
 
 clean:

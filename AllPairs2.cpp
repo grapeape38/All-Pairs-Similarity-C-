@@ -35,7 +35,6 @@ class AllPairs2 : public AllPairs {
                     if (b >= t) {
                         il.add(j, i, w);
                         p.second = 0;
-                        vec.s[j] = 0;
                         rem_size[i]--;
                     }
                     else {
@@ -48,7 +47,7 @@ class AllPairs2 : public AllPairs {
             int x = vec.i;
             VXW &v = vec.v;
             std::unordered_map<int, double> A;
-            double remscore = dot(vec.s, vl.maxPerFeat);
+            double remscore = dot(v, vl.maxPerFeat);
             int minsize = t / vl.maxPerVec[x];
             for (const auto &p1 : v) {
                 int i = p1.first;
@@ -69,7 +68,7 @@ class AllPairs2 : public AllPairs {
                     + std::min(rem_size[y.first], vl.lengths[x])
                     * vl.maxPerVec[x] * maxUnind[y.first];
                 if (approx >= t) {
-                    double s = y.second + dot(vec.s, vl[y.first]);
+                    double s = y.second + dot(v, vl[y.first], vl.cmpF);
                     if (s >= t)
                         R.push_back({x, y.first, s});
                 }

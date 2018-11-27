@@ -2,20 +2,25 @@
 #include <algorithm>
 #include <unordered_map>
 
+#include "VectorList.h"
+
 #ifndef VECTOR_FN_H
 #define VECTOR_FN_H
 
 using V = std::vector<double>;
 using VI = std::vector<int>;
-using SP = std::unordered_map<int, double>;
+using SP = std::unordered_map<int,double>;
+using XW = std::pair<int,double>;
+using VXW = std::vector<XW>;
+
+typedef bool (*cmpF)(const XW &v1, const XW &v2);
 
 void normalize(V &v);
 void normalize(SP &sp);
 
 double dot(V &v1, V &v2);
-int dot(VI &v1, VI &v2);
-double dot(SP &s1, SP &s2);
-double dot(SP &s, V &v);
+double dot(VXW &v1, VXW &v2, CmpFeat &cmpF);
+double dot(VXW &s, V &v);
 
 SP makeSparse(V &v);
 

@@ -17,12 +17,12 @@ struct Res {
 
 class AllPairs {
     protected:
-        VectorList vl;
+        DataList vl;
         std::vector<Res> ResList;
         InvList il;
         int size, n_can_consid;
     public:
-        AllPairs(VectorList vl_) 
+        AllPairs(DataList vl_) 
             : vl(vl_), size(vl_.numFeats()), il(vl_.numFeats()),
               n_can_consid(0) {}
         virtual void FindMatches(Vec &vec, std::vector<Res> &R, double t) = 0;
