@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "AllPairs.h"
+#include "VectorFunctions.h"
 
 using V = std::vector<double>;
 using VXW = std::vector<std::pair<int,double>>;

@@ -5,7 +5,10 @@
 #include "AllPairs0.cpp"
 #include "AllPairs1.cpp"
 #include "AllPairs2.cpp"
+#include "AllPairsBin.cpp"
+#include "VectorFunctions.h"
 #include "VectorList.h"
+#include "BinVectorList.h"
 
 int main() {
     V v1 {4.0, 0.0, 2.1, 5.2}, v2 {1.2, 4.4, 0.0, 7.1}, v3 {1.2, 0.0, -1.2, 0.5};
