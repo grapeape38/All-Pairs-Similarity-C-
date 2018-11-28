@@ -36,7 +36,7 @@ class DataList {
         V maxPerFeat, maxPerVec; 
         VI lengths;
         CmpFeat cmpF;
-        DataList(int numV, int sz) : size(sz), index(numV), cmpF(sz), lengths(sz) {}
+        DataList(int numV, int sz) : size(sz), index(numV), cmpF(sz), lengths(numV) {}
         VXW &operator[](int i) { return vecs[index[i]].v; }
         int numVecs() { return vecs.size(); };
         int numFeats() { return size; }

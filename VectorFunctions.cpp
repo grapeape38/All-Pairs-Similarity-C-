@@ -10,6 +10,7 @@
 
 void normalize(V &v) {
     double s = std::sqrt(std::inner_product(v.begin(), v.end(), v.begin(), 0.0));
+    if (!s) return;
     V res(v.size());
     std::transform(v.begin(), v.end(), res.begin(),
             [&](double d) { return d / s; });
@@ -21,8 +22,10 @@ void normalize(SP &s) {
     for (const auto &p : s)
         sum += p.second*p.second;
     double len = std::sqrt(sum);
-    for (auto &p : s)
-        p.second /= len;
+    if (len) {
+        for (auto &p : s)
+            p.second /= len;
+    }
 }
 
 double dot(V &v1, V &v2) {

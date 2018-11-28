@@ -28,10 +28,10 @@ class AllPairsBin : public AllPairs {
                 ResList = std::move(U);
                 int b = 0;
                 for (auto &p : v) {
-                    int i = p.first;
+                    int j = p.first;
                     b++;
                     if (b / vl.lengths[i] >= t) {
-                        il.add(i, i, 1.0);
+                        il[j].add(i, 1.0);
                         p.second = 0;
                         rem_size[i]--;
                     }
@@ -46,7 +46,7 @@ class AllPairsBin : public AllPairs {
             std::unordered_map<int, double> A;
             for (const auto &p : v) {
                 int i = p.first;
-                il.prune(i, vl.lengths, minsize); 
+                il[i].prune(vl.lengths, minsize); 
                 for (const auto &p2 : il[i]) {
                     int y = p2.first;
                     if (A[y] != 0 || remscore >= minsize)

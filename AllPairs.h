@@ -19,7 +19,7 @@ class AllPairs {
     protected:
         DataList vl;
         std::vector<Res> ResList;
-        InvList il;
+        std::vector<InvList> il;
         int size, n_can_consid;
     public:
         AllPairs(DataList vl_) 

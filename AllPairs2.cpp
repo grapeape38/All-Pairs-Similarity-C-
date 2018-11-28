@@ -16,7 +16,7 @@ class AllPairs2 : public AllPairs {
         AllPairs2(VectorList vl_, double t) 
             : AllPairs(vl_) 
         {
-            maxUnind.assign(size, -1.1);
+            maxUnind.assign(vl.numVecs(), -1.1);
             rem_size = vl.lengths;
             for (Vec &vec : vl) {
                 int i = vec.i;
@@ -33,7 +33,7 @@ class AllPairs2 : public AllPairs {
                     double w = p.second;
                     b += std::min(vl.maxPerVec[i], vl.maxPerFeat[j]) * w;
                     if (b >= t) {
-                        il.add(j, i, w);
+                        il[j].add(i, w);
                         p.second = 0;
                         rem_size[i]--;
                     }
@@ -52,7 +52,7 @@ class AllPairs2 : public AllPairs {
             for (const auto &p1 : v) {
                 int i = p1.first;
                 double w = p1.second;
-                il.prune(i, vl.lengths, minsize);
+                il[i].prune(vl.lengths, minsize);
                 for (const auto &p2 : il[i]) {
                     int y = p2.first;
                     double w2 = p2.second;

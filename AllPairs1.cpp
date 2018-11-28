@@ -28,7 +28,7 @@ class AllPairs1 : public AllPairs {
                     double w = p.second;
                     b += vl_.maxPerFeat[j] * w;
                     if (b >= t) {
-                        il.add(j, i, w);
+                        il[j].add(i, w);
                         p.second = 0;
                     }
                 }

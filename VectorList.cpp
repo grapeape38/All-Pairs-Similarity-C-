@@ -8,12 +8,13 @@ VectorList::VectorList(VSP &vs, int sz)
     for (int x = 0; x < (int)vs.size(); x++) {
         const SP &v = vs[x];
         lengths[x] = v.size();
+        VXW vx;
         for (const auto &p : v) { 
             cmpF.featCount[p.first]++;
             maxPerFeat[p.first] = std::max(maxPerFeat[p.first], p.second);
             maxPerVec[x] = std::max(maxPerVec[x], p.second);
+            vx.push_back({p.first, p.second});
         }
-        VXW vx(v.begin(), v.end());
         vecs.push_back(Vec {x, vx});
     }
     auto cmpVec =

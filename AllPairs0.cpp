@@ -23,7 +23,7 @@ class AllPairs0 : public AllPairs {
                 ResList = std::move(U);
                 const VXW &v = vec.v;
                 for (const auto &p : v) {
-                    il.add(p.first, i, p.second);
+                    il[p.first].add(i, p.second);
                 }
             }
         }
