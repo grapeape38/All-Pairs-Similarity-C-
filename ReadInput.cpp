@@ -40,6 +40,21 @@ void loadSparseData(const char* fname, VSP &vss) {
    ifs.close();
 }
 
+void loadNaiveData(const char* fname, std::vector<V> &v) {
+    std::ifstream ifs(fname);
+    std::string line;
+    while (getline(ifs, line)) {
+        std::stringstream ss(line);
+        V fts;
+        double x; 
+        while (ss >> x)
+            fts.push_back(x);
+        if (fts.size())
+            v.push_back(fts);
+    }
+    ifs.close();
+}
+
 void loadData(const char* fname, VSP &vss, int &d, bool sparse) {
     if (sparse) {
         loadSparseData(fname, vss);

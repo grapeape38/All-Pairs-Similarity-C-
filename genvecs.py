@@ -1,6 +1,6 @@
 import random
-numdims = 50 
-n = 1000 
+numdims = 30 
+n = 10000
 r = 1000
 for i in range(n):
     for j in range(numdims):

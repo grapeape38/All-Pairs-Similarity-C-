@@ -7,24 +7,32 @@
 #include "ReadInput.h"
 #include "AllPairs0.cpp"
 #include "AllPairs1.cpp"
-#include "AllPairs2.cpp"
+#include "AllPairs2.cpp" 
 #include "AllPairsBin.cpp"
 #include "VectorList.h"
 
-void printNaive(std::vector<V> &vs) {
+void computeNaive(std::vector<V> &vs, double t) {
     /*test output*/
+    std::cout << "Computing Naively" << std::endl;
+    std::vector<Res> ResList;
     for (int i = 0; i < (int)vs.size(); i++) {
         V v1 = vs[i];
         for (int j = i+1; j < (int)vs.size(); j++) {
             V v2 = vs[j];
-            std::cout << i << " " << j << " " << dot(v1, v2) << std::endl;
+            double d = dot(v1, v2);
+            if (d >= t) {
+                ResList.push_back({i, j, d});
+            }
         }
+    }
+    for (auto &r : ResList) {
+        std::cout << r.x << " " << r.y << " " << r.w << std::endl;
     }
 }
 void parseFlags(int argc, char *argv[], int &type, int &d, double &t, bool &sparse) {
   char c;
   std::stringstream ss;
-  while ((c = getopt(argc, argv, "012bst:d:")) != -1)
+  while ((c = getopt(argc, argv, "012bnst:d:")) != -1)
     switch (c)
       {
         case '0':
@@ -46,6 +54,9 @@ void parseFlags(int argc, char *argv[], int &type, int &d, double &t, bool &spar
         case 't':
             ss << optarg;
             ss >> t;
+            break;
+        case 'n':
+            type = 4;
             break;
         case 's':
             sparse = true;
@@ -70,8 +81,14 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     std::cout << "type: " << type << " threshold: " << t << std::endl;
+    if (type == 4) {
+        std::vector<V> vs;
+        loadNaiveData(argv[optind], vs);
+        computeNaive(vs, t);
+        return 0;
+    }
     AllPairs *ap = nullptr;
-    if (t != 3) {
+    if (type != 3) {
         VSP vss;
         loadData(argv[optind], vss, d, false);
         VectorList vl(vss, d);

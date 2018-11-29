@@ -21,11 +21,15 @@ class AllPairs {
     public:
         AllPairs(DataList vl_) 
             : vl(vl_), size(vl_.numFeats()), il(vl_.numFeats()),
-              n_can_consid(0) {}
+              n_can_consid(0) {
+                  std::cout << "Running AllPairs" << std::endl;
+
+              }
         void printPairs() {
             for (const Res &r : ResList) {
                 std::cout << r.x << " " << r.y << " " << r.w << std::endl;
             }
+            std::cout << "Pairs found: " << ResList.size() << std::endl;
             std::cout << "Number of candidates considered: " << n_can_consid
                 << std::endl;
         }
