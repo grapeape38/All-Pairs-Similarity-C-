@@ -15,19 +15,14 @@ class AllPairs0 : public AllPairs {
         {
             for (Vec &vec : vl) {
                 int i = vec.i;
-                std::vector<Res> R, U; 
-                FindMatches(vec, R, t);
-                std::set_union(ResList.begin(), ResList.end(),
-                        R.begin(), R.end(),
-                        std::back_inserter(U));
-                ResList = std::move(U);
+                FindMatches(vec, t);
                 const VXW &v = vec.v;
                 for (const auto &p : v) {
                     il[p.first].add(i, p.second);
                 }
             }
         }
-        void FindMatches(Vec &vec, std::vector<Res> &R, double t) {
+        void FindMatches(Vec &vec, double t) {
             int x = vec.i;
             VXW &v = vec.v;
             std::unordered_map<int, double> A;
@@ -43,7 +38,7 @@ class AllPairs0 : public AllPairs {
             for (const auto &y : A) {
                 n_can_consid++;
                 if (y.second >= t)
-                    R.push_back({x, y.first, y.second});
+                    ResList.push_back({x, y.first, y.second});
             }
         }
 };

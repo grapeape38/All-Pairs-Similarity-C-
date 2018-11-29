@@ -20,12 +20,7 @@ class AllPairsBin : public AllPairs {
             for (Vec &vec : vl) {
                 int i = vec.i;
                 VXW &v = vec.v;
-                std::vector<Res> R, U; 
-                FindMatches(vec, R, t);
-                std::set_union(ResList.begin(), ResList.end(),
-                        R.begin(), R.end(),
-                        std::back_inserter(U));
-                ResList = std::move(U);
+                FindMatches(vec, t);
                 int b = 0;
                 for (auto &p : v) {
                     int j = p.first;
@@ -38,7 +33,7 @@ class AllPairsBin : public AllPairs {
                 }
             }
         }
-        void FindMatches(Vec &vec, std::vector<Res> &R, double t) {
+        void FindMatches(Vec &vec, double t) {
             int x = vec.i;
             VXW &v = vec.v; 
             int remscore = vl.lengths[x];
@@ -63,7 +58,7 @@ class AllPairsBin : public AllPairs {
                     double d = (y.second + dot(vl[x], vl[y.first], vl.cmpF)) / 
                         std::sqrt(xlen * ylen);
                     if (d >= t)
-                        R.push_back({x, y.first, d});
+                        ResList.push_back({x, y.first, d});
                 }
             }
         }

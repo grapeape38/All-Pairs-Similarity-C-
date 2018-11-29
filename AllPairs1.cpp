@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <vector>
 #include <unordered_map>
 
@@ -16,12 +15,7 @@ class AllPairs1 : public AllPairs {
             for (Vec &vec : vl) {
                 int i = vec.i;
                 VXW &v = vec.v;
-                std::vector<Res> R, U; 
-                FindMatches(vec, R, t);
-                std::set_union(ResList.begin(), ResList.end(),
-                        R.begin(), R.end(),
-                        std::back_inserter(U));
-                ResList = std::move(U);
+                FindMatches(vec, t);
                 double b = 0.0;
                 for (auto &p : v) {
                     int j = p.first;
@@ -34,7 +28,7 @@ class AllPairs1 : public AllPairs {
                 }
             }
         }
-        void FindMatches(Vec &vec, std::vector<Res> &R, double t) {
+        void FindMatches(Vec &vec, double t) {
             int x = vec.i;
             VXW &v = vec.v; 
             std::unordered_map<int, double> A;
@@ -51,7 +45,7 @@ class AllPairs1 : public AllPairs {
                 n_can_consid++;
                 double s = y.second + dot(v, vl[y.first], vl.cmpF);
                 if (s >= t)
-                    R.push_back({x, y.first, s});
+                    ResList.push_back({x, y.first, s});
             }
         }
 };

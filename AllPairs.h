@@ -10,9 +10,6 @@
 struct Res {
     int x, y;
     double w;
-    bool operator<(const Res &r2) {
-        return x < r2.x || (x == r2.x && y < r2.y);
-    }
 };
 
 class AllPairs {
@@ -25,7 +22,6 @@ class AllPairs {
         AllPairs(DataList vl_) 
             : vl(vl_), size(vl_.numFeats()), il(vl_.numFeats()),
               n_can_consid(0) {}
-        virtual void FindMatches(Vec &vec, std::vector<Res> &R, double t) = 0;
         void printPairs() {
             for (const Res &r : ResList) {
                 std::cout << r.x << " " << r.y << " " << r.w << std::endl;

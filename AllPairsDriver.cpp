@@ -1,16 +1,14 @@
 #include <vector>
 #include <numeric>
 #include <iostream>
-#include <fstream>
-#include <string>
 #include <sstream>
 #include <unistd.h>
 
+#include "ReadInput.h"
 #include "AllPairs0.cpp"
 #include "AllPairs1.cpp"
 #include "AllPairs2.cpp"
 #include "AllPairsBin.cpp"
-#include "VectorFunctions.h"
 #include "VectorList.h"
 
 void printNaive(std::vector<V> &vs) {
@@ -23,52 +21,10 @@ void printNaive(std::vector<V> &vs) {
         }
     }
 }
-
-void loadBinaryData(const char* fname, VSP &vss, int &nf, bool sparse) {
- /*
-    if (binary) {
-        std::vector<VI> vs;
-        while (getline(ifs, line)) {
-            std::stringstream ss(line);
-            VI fts;
-            int x; 
-            while (ss >> x)
-                fts.push_back(x);
-            vs.push_back(fts);
-        }
-        return BinVectorList(vs, nf);
-    }*/
-}
-
-void loadData(const char* fname, VSP &vss, int &nf, bool sparse) {
-    std::ifstream ifs(fname);
-    std::string line;
-    std::vector<V> vs;
-    while (getline(ifs, line)) {
-        std::stringstream ss(line);
-        V fts;
-        double x; 
-        while (ss >> x)
-            fts.push_back(x);
-        if (fts.size())
-            vs.push_back(fts);
-    }
-    for (V &v : vs) {
-        normalize(v);
-        SP sp = makeSparse(v);
-        if (sp.size())
-            vss.push_back(sp);
-    }
-    //printNaive(vs);
-    //std::cout << std::endl;
-    nf = vs[0].size();
-    ifs.close();
-}
-
-void parseFlags(int argc, char *argv[], int &type, double &t) {
+void parseFlags(int argc, char *argv[], int &type, int &d, double &t) {
   char c;
   std::stringstream ss;
-  while ((c = getopt(argc, argv, "012bt:f:")) != -1)
+  while ((c = getopt(argc, argv, "012bt:d:")) != -1)
     switch (c)
       {
         case '0':
@@ -83,6 +39,10 @@ void parseFlags(int argc, char *argv[], int &type, double &t) {
         case 'b':
             type = 3;
             break;
+        case 'd':
+            ss << optarg;
+            ss >> d;
+            break;
         case 't':
             ss << optarg;
             ss >> t;
@@ -92,21 +52,6 @@ void parseFlags(int argc, char *argv[], int &type, double &t) {
       }
 }
 
-void dummyTest() {
-    V v1 {4.0, 0.0, 2.1, 5.2}, v2 {1.2, 4.4, 0.0, 7.1}, v3 {1.2, 0.0, -1.2, 0.5};
-    std::vector<V> vs {v1, v2, v3};
-    for (V &v : vs)
-        normalize(v);
-    std::vector<SP> vss;
-    for (V &v : vs) {
-        SP s = makeSparse(v);
-        vss.push_back(s);
-    }
-    VectorList vl(vss, 4); 
-    AllPairs1 ap(vl, 0.2);
-    ap.printPairs();
-}
-
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "Usage: filename -<type> (0/1/2) -t <threshold>";
@@ -114,19 +59,18 @@ int main(int argc, char* argv[]) {
     }
     int type = 2;
     double t = 0.5;
-    bool binary = false;
-    parseFlags(argc, argv, type, t);
+    int d = 0;
+    parseFlags(argc, argv, type, d, t);
     if (optind >= argc) {
         std::cout << "Usage: filename -<type> (0/1/2) -t <threshold>";
         return 0;
     }
     std::cout << "type: " << type << " threshold: " << t << std::endl;
-    AllPairs *ap;
+    AllPairs *ap = nullptr;
     if (t != 3) {
-        int sz = 10;
         VSP vss;
-        loadData(argv[optind], vss, sz, false);
-        VectorList vl(vss, sz);
+        loadData(argv[optind], vss, d, false);
+        VectorList vl(vss, d);
         switch(type) {
             case 0: 
                 ap = new AllPairs0(vl, t);
@@ -137,6 +81,12 @@ int main(int argc, char* argv[]) {
             default: 
                 ap = new AllPairs2(vl, t);
         }
+    }
+    else {
+        std::vector<VI> vs;
+        loadBinaryData(argv[optind], vs);
+        BinVectorList bvl(vs, d);
+        ap = new AllPairsBin(bvl, t);
     }
     if (ap != nullptr)
         ap->printPairs();

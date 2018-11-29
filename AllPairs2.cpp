@@ -21,12 +21,7 @@ class AllPairs2 : public AllPairs {
             for (Vec &vec : vl) {
                 int i = vec.i;
                 VXW &v = vec.v;
-                std::vector<Res> R, U; 
-                FindMatches(vec, R, t);
-                std::set_union(ResList.begin(), ResList.end(),
-                        R.begin(), R.end(),
-                        std::back_inserter(U));
-                ResList = std::move(U);
+                FindMatches(vec, t);
                 double b = 0.0;
                 for (auto &p : v) {
                     int j = p.first;
@@ -43,7 +38,7 @@ class AllPairs2 : public AllPairs {
                 }
             }
         }
-        void FindMatches(Vec &vec, std::vector<Res> &R, double t) {
+        void FindMatches(Vec &vec, double t) {
             int x = vec.i;
             VXW &v = vec.v;
             std::unordered_map<int, double> A;
@@ -56,9 +51,9 @@ class AllPairs2 : public AllPairs {
                 for (const auto &p2 : il[i]) {
                     int y = p2.first;
                     double w2 = p2.second;
-                    if (A[y] != 0 || remscore >= t) {
+                    //if (A[y] != 0 || remscore >= t) {
                         A[y] += w * w2;
-                    }
+                    //}
                 }
                 remscore -= w * vl.maxPerFeat[i];
             }
@@ -70,7 +65,7 @@ class AllPairs2 : public AllPairs {
                 if (approx >= t) {
                     double s = y.second + dot(v, vl[y.first], vl.cmpF);
                     if (s >= t)
-                        R.push_back({x, y.first, s});
+                        ResList.push_back({x, y.first, s});
                 }
             }
         }
