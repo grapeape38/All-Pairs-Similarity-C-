@@ -41,6 +41,10 @@ void loadSparseData(const char* fname, VSP &vss) {
 }
 
 void loadData(const char* fname, VSP &vss, int &d, bool sparse) {
+    if (sparse) {
+        loadSparseData(fname, vss);
+        return;
+    }
     std::ifstream ifs(fname);
     std::string line;
     std::vector<V> vs;

@@ -21,10 +21,10 @@ void printNaive(std::vector<V> &vs) {
         }
     }
 }
-void parseFlags(int argc, char *argv[], int &type, int &d, double &t) {
+void parseFlags(int argc, char *argv[], int &type, int &d, double &t, bool &sparse) {
   char c;
   std::stringstream ss;
-  while ((c = getopt(argc, argv, "012bt:d:")) != -1)
+  while ((c = getopt(argc, argv, "012bst:d:")) != -1)
     switch (c)
       {
         case '0':
@@ -47,6 +47,9 @@ void parseFlags(int argc, char *argv[], int &type, int &d, double &t) {
             ss << optarg;
             ss >> t;
             break;
+        case 's':
+            sparse = true;
+            break;
         default:
             abort ();
       }
@@ -60,7 +63,8 @@ int main(int argc, char* argv[]) {
     int type = 2;
     double t = 0.5;
     int d = 0;
-    parseFlags(argc, argv, type, d, t);
+    bool sparse = false;
+    parseFlags(argc, argv, type, d, t, sparse);
     if (optind >= argc) {
         std::cout << "Usage: filename -<type> (0/1/2) -t <threshold>";
         return 0;
