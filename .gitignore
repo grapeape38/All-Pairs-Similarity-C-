@@ -4,4 +4,5 @@ allpairs
 FindMatchesPll.h
 FindMatchesPll.cpp
 AllPairsPll.cpp
+threadstest/
 test.in

@@ -52,8 +52,10 @@ void loadNaiveData(const char* fname, std::vector<V> &v) {
         double x; 
         while (ss >> x)
             fts.push_back(x);
-        if (fts.size())
+        if (fts.size()) {
+            normalize(fts);
             v.push_back(fts);
+        }
     }
     ifs.close();
 }
