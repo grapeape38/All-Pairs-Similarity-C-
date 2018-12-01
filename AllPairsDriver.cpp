@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
+#include <chrono>
 
 #include "ReadInput.h"
 #include "AllPairs0.cpp"
@@ -65,6 +66,13 @@ void parseFlags(int argc, char *argv[], int &type, double &t, bool &sparse) {
       }
 }
 
+using namespace std::chrono;
+inline double timeDiff(high_resolution_clock::time_point &prev) {
+        auto c = high_resolution_clock::now();
+        duration<double> time_span = duration_cast<duration<double>>(c - prev);
+        return time_span.count();
+}
+
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "Usage: filename -<type> (0/1/2) -t <threshold>";
@@ -87,10 +95,14 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     AllPairs *ap = nullptr;
+    auto now = high_resolution_clock::now();
     if (type != 3) {
         VSP vss;
         loadData(argv[optind], vss, d, sparse);
         VectorList vl(vss, d);
+        double t_d = timeDiff(now);
+        std::cout << "Took " << t_d << " seconds to read and preprocess input.\n";
+        now = high_resolution_clock::now();
         switch(type) {
             case 0: 
                 ap = new AllPairs0(vl, t);
@@ -106,10 +118,15 @@ int main(int argc, char* argv[]) {
         std::vector<VI> vs;
         loadBinaryData(argv[optind], vs, d);
         BinVectorList bvl(vs, d);
+        double t_d = timeDiff(now);
+        std::cout << "Took " << t_d << " seconds to read and preprocess input.\n";
+        now = high_resolution_clock::now();
         ap = new AllPairsBin(bvl, t);
     }
     if (ap != nullptr)
         ap->printPairs();
+    double t_d = timeDiff(now);
+    std::cout << "Took " << t_d << " seconds to run All Pairs.\n";
     delete ap;
     return 0;
 }
