@@ -26,9 +26,9 @@ class AllPairs {
 
               }
         void printPairs() {
-            for (const Res &r : ResList) {
+/*            for (const Res &r : ResList) {
                 std::cout << r.x << " " << r.y << " " << r.w << std::endl;
-            }
+            }*/
             std::cout << "Pairs found: " << ResList.size() << std::endl;
             std::cout << "Number of candidates considered: " << n_can_consid
                 << std::endl;

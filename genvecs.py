@@ -1,6 +1,6 @@
 import random
 numdims = 25 
-n = 5000
+n = 10000
 r = 1000
 sparse_chance = 0.9
 for i in range(n):

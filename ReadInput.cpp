@@ -37,8 +37,10 @@ void loadSparseData(const char* fname, VSP &vss, int &d) {
     while (getline(ifs, line)) {
         SP sp;
         parseSparse(line, sp, d);
-        normalize(sp);
-        vss.push_back(sp);
+        if (sp.size()) {
+            normalize(sp);
+            vss.push_back(sp);
+        }
    }
    ifs.close();
 }
