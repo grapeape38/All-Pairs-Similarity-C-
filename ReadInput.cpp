@@ -1,7 +1,7 @@
 #include "ReadInput.h"
 
 void parseSparse(std::string in, SP &v, int &d) {
-    std::regex e {"(\\d):(\\d(\\.\\d*)?)"} ;
+    std::regex e {"(\\d+):(\\d+(\\.\\d*)?)"} ;
     std::sregex_iterator rit(in.begin(), in.end(), e);
     std::sregex_iterator rend;
     while (rit != rend) {
