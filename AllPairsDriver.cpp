@@ -29,10 +29,10 @@ void computeNaive(std::vector<V> &vs, double t) {
         std::cout << r.x << " " << r.y << " " << r.w << std::endl;
     }
 }
-void parseFlags(int argc, char *argv[], int &type, int &d, double &t, bool &sparse) {
+void parseFlags(int argc, char *argv[], int &type, double &t, bool &sparse) {
   char c;
   std::stringstream ss;
-  while ((c = getopt(argc, argv, "012bnst:d:")) != -1)
+  while ((c = getopt(argc, argv, "012bnspt:")) != -1)
     switch (c)
       {
         case '0':
@@ -47,16 +47,15 @@ void parseFlags(int argc, char *argv[], int &type, int &d, double &t, bool &spar
         case 'b':
             type = 3;
             break;
-        case 'd':
-            ss << optarg;
-            ss >> d;
-            break;
         case 't':
             ss << optarg;
             ss >> t;
             break;
         case 'n':
             type = 4;
+            break;
+        case 'p':
+            type = 5;
             break;
         case 's':
             sparse = true;
@@ -75,7 +74,7 @@ int main(int argc, char* argv[]) {
     double t = 0.5;
     int d = 0;
     bool sparse = false;
-    parseFlags(argc, argv, type, d, t, sparse);
+    parseFlags(argc, argv, type, t, sparse);
     if (optind >= argc) {
         std::cout << "Usage: filename -<type> (0/1/2) -t <threshold>";
         return 0;
@@ -90,7 +89,7 @@ int main(int argc, char* argv[]) {
     AllPairs *ap = nullptr;
     if (type != 3) {
         VSP vss;
-        loadData(argv[optind], vss, d, false);
+        loadData(argv[optind], vss, d, sparse);
         VectorList vl(vss, d);
         switch(type) {
             case 0: 
@@ -105,7 +104,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         std::vector<VI> vs;
-        loadBinaryData(argv[optind], vs);
+        loadBinaryData(argv[optind], vs, d);
         BinVectorList bvl(vs, d);
         ap = new AllPairsBin(bvl, t);
     }

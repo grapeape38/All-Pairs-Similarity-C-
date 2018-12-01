@@ -10,6 +10,7 @@ class InvList {
         int fp;
     public:
         InvList() : fp(0) {}
+        int size() { return items.size(); }
         void add(int x, double w) {
             items.push_back({x, w});
         }
@@ -25,6 +26,7 @@ class InvList {
                 }
             }
         }
+        std::pair<int,double> &operator[](int i) { return items[i + fp]; }
         using const_iterator = std::vector<std::pair<int,double>>::const_iterator;
         const_iterator begin() { return items.begin() + fp; }
         const_iterator end() { return items.end(); }

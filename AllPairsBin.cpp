@@ -44,7 +44,7 @@ class AllPairsBin : public AllPairs {
                 il[i].prune(vl.lengths, minsize); 
                 for (const auto &p2 : il[i]) {
                     int y = p2.first;
-                    if (A[y] != 0 || remscore >= minsize)
+                    //if (A[y] != 0 || remscore >= minsize)
                         A[y]++;
                     remscore--;
                 }

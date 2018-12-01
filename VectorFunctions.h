@@ -13,8 +13,6 @@ using SP = std::unordered_map<int,double>;
 using XW = std::pair<int,double>;
 using VXW = std::vector<XW>;
 
-typedef bool (*cmpF)(const XW &v1, const XW &v2);
-
 void normalize(V &v);
 void normalize(SP &sp);
 

@@ -1,4 +1,7 @@
 old/
 *.o
 allpairs
+FindMatchesPll.h
+FindMatchesPll.cpp
+AllPairsPll.cpp
 test.in
